@@ -1,4 +1,5 @@
-import { auth, clerkClient } from "@clerk/nextjs/server"
+import { clerkClient } from "@clerk/nextjs/server"
+import { auth } from "@/lib/auth"
 import jwt from "jsonwebtoken"
 import { NextResponse } from "next/server"
 
