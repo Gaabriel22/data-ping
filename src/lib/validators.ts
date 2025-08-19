@@ -22,9 +22,11 @@ export const registerSchema = z.object({
 
 export const paymentSchema = z.object({
   title: z.string().min(2),
-  amount: z.number().positive(),
-  dueDate: z.coerce.date(),
-  status: z.enum(["pendente", "pago"]),
+  amount: z.string().regex(/^\d+(\.\d+)?$/, "Valor inválido"),
+  dueDate: z.string().refine((val) => !isNaN(Date.parse(val)), {
+    message: "Data inválida",
+  }),
+  status: z.enum(["paid", "unpaid", "overdue"]),
   notes: z.string().optional().nullable(),
   isRecurring: z.boolean().default(false),
   recurrenceRule: z.string().optional().nullable(),
@@ -46,7 +48,7 @@ export const categorySchema = z.object({
 
 export const reminderSchema = z.object({
   daysBefore: z.number().min(0).max(30),
-  hour: z.coerce.date(),
+  hour: z.string().datetime(),
   viaEmail: z.boolean().default(true),
   viaPush: z.boolean().default(false),
   viaWhatsapp: z.boolean().default(false),
@@ -58,9 +60,9 @@ export const reminderSchema = z.object({
 // --------------------------
 
 export const notificationSchema = z.object({
-  channel: z.string(),
-  status: z.enum(["enviado", "erro"]),
-  sentAt: z.coerce.date(),
+  channel: z.enum(["email", "push", "whatsapp"]),
+  status: z.enum(["sent", "failed"]),
+  sentAt: z.string().datetime(), // string ISO
   errorMessage: z.string().optional().nullable(),
 })
 
@@ -72,5 +74,5 @@ export const subscriptionSchema = z.object({
   plan: z.enum(["free", "pro", "premium"]),
   stripeId: z.string(),
   status: z.enum(["active", "canceled", "past_due"]),
-  renewsAt: z.coerce.date(),
+  renewsAt: z.string().datetime(),
 })
