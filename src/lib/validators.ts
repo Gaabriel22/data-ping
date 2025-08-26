@@ -28,7 +28,7 @@ export const paymentSchema = z.object({
   }),
   status: z.enum(["paid", "unpaid", "overdue"]),
   notes: z.string().optional().nullable(),
-  isRecurring: z.boolean().default(false),
+  isRecurring: z.boolean(),
   recurrenceRule: z.string().optional().nullable(),
   categoryId: z.string().uuid().optional().nullable(),
 })
